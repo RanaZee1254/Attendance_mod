@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { useState } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -10,6 +11,8 @@ import { login } from '@/routes';
 import { store } from '@/routes/register';
 
 export default function Register() {
+    const [accountType, setAccountType] = useState('teacher');
+
     return (
         <>
             <Head title="Register" />
@@ -84,10 +87,55 @@ export default function Register() {
                                 />
                             </div>
 
+                            <div className="grid gap-2">
+                                <Label htmlFor="account_type">Account type</Label>
+                                <select
+                                    id="account_type"
+                                    name="account_type"
+                                    required
+                                    tabIndex={5}
+                                    value={accountType}
+                                    onChange={(event) =>
+                                        setAccountType(event.target.value)
+                                    }
+                                    className="rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                >
+                                    <option value="teacher">Teacher</option>
+                                    <option value="student">Student</option>
+                                </select>
+                                <InputError message={errors.account_type} />
+                            </div>
+
+                            {accountType === 'student' && (
+                                <div className="grid gap-2">
+                                    <Label htmlFor="student_class">Class</Label>
+                                    <select
+                                        id="student_class"
+                                        name="student_class"
+                                        required
+                                        tabIndex={6}
+                                        className="rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                    >
+                                        <option value="">Select class</option>
+                                        <option value="Class 1">Class 1</option>
+                                        <option value="Class 2">Class 2</option>
+                                        <option value="Class 3">Class 3</option>
+                                        <option value="Class 4">Class 4</option>
+                                        <option value="Class 5">Class 5</option>
+                                        <option value="Class 6">Class 6</option>
+                                        <option value="Class 7">Class 7</option>
+                                        <option value="Class 8">Class 8</option>
+                                        <option value="Class 9">Class 9</option>
+                                        <option value="Class 10">Class 10</option>
+                                    </select>
+                                    <InputError message={errors.student_class} />
+                                </div>
+                            )}
+
                             <Button
                                 type="submit"
                                 className="mt-2 w-full"
-                                tabIndex={5}
+                                tabIndex={7}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}

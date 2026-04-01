@@ -5,7 +5,9 @@ namespace App\Actions\Fortify;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class CreateNewUser implements CreatesNewUsers
@@ -22,12 +24,23 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            'account_type' => ['required', 'string', Rule::in(['teacher', 'student'])],
+            'student_class' => [
+                Rule::requiredIf(
+                    isset($input['account_type']) && $input['account_type'] === 'student'
+                ),
+                'nullable',
+                'string',
+                'max:255',
+            ],
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'password' => $input['password'],
+            'password' => Hash::make($input['password']),
+            'role' => $input['account_type'],
+            'student_class' => $input['student_class'] ?? null,
         ]);
     }
 }

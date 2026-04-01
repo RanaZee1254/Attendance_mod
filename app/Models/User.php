@@ -13,6 +13,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'student_class',
     ];
 
     public function attendances()

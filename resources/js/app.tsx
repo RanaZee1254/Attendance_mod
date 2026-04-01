@@ -32,3 +32,11 @@ createInertiaApp({
 
 // This will set light / dark mode on load...
 initializeTheme();
+
+if (typeof window !== 'undefined') {
+    const globalWindow = window as any;
+    globalWindow.mgt = globalWindow.mgt ?? {};
+    if (typeof globalWindow.mgt.clearMarks !== 'function') {
+        globalWindow.mgt.clearMarks = () => {};
+    }
+}
